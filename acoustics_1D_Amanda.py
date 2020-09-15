@@ -1,8 +1,8 @@
 import numpy as np
 
-lenght = 0.8
-nel = 5
-rho_e = 1.22           # Considerando ar;
+lenght = 0.8           # Comprimento total;
+nel = 5                # Número de elementos;
+rho_e = 1.22           # Densidade do ar;
 c_e = 340              # Velocidade do som no ar;
 A_e = 3.14e-6          # Área da seção transversal, tubo de 2 mm de diâmetro;
 
@@ -33,10 +33,10 @@ def mesh_1D(lenght,nel):
 
 mesh_1D(lenght,nel)
 
-element  = [x[0] for x in connect]
-node_1 = [x[1] for x in connect]
-node_2 = [x[2] for x in connect]
-x_el = [x[1] for x in coord]                      # Posição nodal;
+element  = [x[0] for x in connect]               # Número do elemento;
+node_1 = [x[1] for x in connect]                 # Nó local 1;
+node_2 = [x[2] for x in connect]                 # Nó local 2;
+x_el = [x[1] for x in coord]                     # Posição nodal;
 
 aux_K = [[1, -1],
          [-1, 1]]
@@ -44,17 +44,17 @@ aux_K = [[1, -1],
 aux_M = [[2, 1],
          [1, 2]]      
 
-el = 1                                          # Número do elemento em que se deseja as matrizes elementares;
+el = 1                                           # Número do elemento em que se deseja as matrizes elementares;
 
 def matrices(el, coord, connect, rho_e, c_e, A_e):
-    h_e = []     # Mudar para h_e
+    h_e = []     
     for i in range(nel):
-        h_e.append(x_el[i+1] - x_el[i])        # Posição relativa ao nó anterior (comprimento elementar);
+        h_e.append(x_el[i+1] - x_el[i])          # Posição relativa ao nó anterior (comprimento elementar);
     global K_e
     global M_e
-    K_e = (A_e/(rho_e * h_e[el])) * np.array(aux_K)
-    Ke_0 = rho_e * c_e * c_e                     # Módulo de compressibilidade do elemento;
-    M_e = (A_e * h_e[el]/(6*Ke_0))*np.array(aux_M)
+    K_e = (A_e/(rho_e * h_e[el])) * np.array(aux_K)               # Matriz de rigidez elementar;
+    Ke_0 = rho_e * c_e * c_e                                      # Módulo de compressibilidade do elemento;
+    M_e = (A_e * h_e[el]/(6*Ke_0))*np.array(aux_M)                # Matriz de massa elementar;
     
     return K_e, M_e
 
